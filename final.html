@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>カレンダー</title>
+    <link rel="stylesheet" href="calendar.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
+    </head>
+    <script>
+      $(function(){
+        var setFileInput = $('.imgInput'),
+        setFileImg = $('.imgView');
+
+        setFileInput.each(function(){
+          var selfFile = $(this),
+          selfInput = $(this).find('input[type=file]'),
+          prevElm = selfFile.find(setFileImg),
+          orgPass = prevElm.attr('src');
+
+          selfInput.change(function(){
+              var file = $(this).prop('files')[0],
+              fileRdr = new FileReader();
+
+              if (!this.files.length){
+                  prevElm.attr('src', orgPass);
+                  return;
+              } else {
+                  if (!file.type.match('image.*')){
+                      prevElm.attr('src', orgPass);
+                      return;
+                  } else {
+                      fileRdr.onload = function() {
+                          prevElm.attr('src', fileRdr.result);
+                      }
+                      fileRdr.readAsDataURL(file);
+                  }
+              }
+          });
+      });
+  });
+  </script>
+
+
+  </head>
+
+  <body>
+    <header>
+      <h1>カレンダー作成</h1>
+      <a href = "final2.html"><p>このサイトの説明</p></a>
+      <p><label for="year" class="box">Year</label><input type="text" id="year"></p>
+      <p><label for="month" class="box">Month</label><input type="text" id="month"></p>
+      <p><input type="button" value="表示" class="square_btn" onclick="makeCalendar(Number(document.getElementById('year').value),Number(document.getElementById('month').value));"></p>
+    </header>
+
+    <article>
+      <div class="imgInput">
+        <label for="file_photo" class="square_btn photo"><div class="displaynone">＋写真を選択</div>
+        <input type="file" name="file1" id="file_photo" accept="image/*" class="displaynone" style="display:none;">
+        <img src="img/noimage.png" alt="no image" class="imgView">
+      </div>
+      <table id = "calendar">
+      </table>
+    </article>
+
+    <footer>
+      <input type="button" class="square_btn" value="カレンダーを印刷する" onclick="window.print();" />
+    </footer>
+
+    <script src="final.js"></script>
+    <script>
+
+      $('input').on('focusin', function() {
+        $(this).parent().find('label').addClass('active');
+      });
+
+      $('input').on('focusout', function() {
+        if (!this.value) {
+          $(this).parent().find('label').removeClass('active');
+        }
+      });
+    </script>
+  </body>
+
+
+</html>

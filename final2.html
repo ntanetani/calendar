@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>サイトの説明</title>
+    <link rel="stylesheet" href="calendar.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <h1>このサイトの説明</h1>
+    <h3>このサイトの作成者</h3>
+    <p>種谷 望 慶應義塾大学環境情報学部1年(2019年1月時点)</p>
+    <p>米澤 虎 慶應義塾大学総合政策学部1年(2019年1月時点)</p>
+    <div class="center">
+    <select name="sources" id="sources" class="custom-select sources" placeholder="学校を選択">
+      <option value="東京学芸大学附属世田谷小学校">米澤種谷出身小学校</option>
+      <option value="東京学芸大学附属世田谷中学校">米澤種谷出身中学校</option>
+      <option value="佼成学園高等学校">米澤出身高校</option>
+      <option value="慶應義塾志木高等学校">種谷出身高校</option>
+      <option value="慶應義塾大学湘南藤沢キャンパス">米澤種谷在学大学</option>
+    </select>
+  </div>
+    <script src='selectStyle.js'></script>
+    <button onclick="school();" class="square_btn">検索</button>
+    <div id="map" style="width:500px;height:300px"></div>
+
+    <script type="text/javascript">
+      function initMap() {
+          geocoder = new google.maps.Geocoder();
+          var latlng = new google.maps.LatLng(35.388276, 139.427348);
+
+          var opt = {
+            zoom: 15,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+
+          var map = new google.maps.Map(document.getElementById('map'), opt);
+
+          var marker = new google.maps.Marker({
+                             position: latlng,
+                             map: map
+                });
+        }
+
+        function school(){
+          var select = document.getElementById('sources');
+          var address = select.value;
+          if (geocoder) {
+          geocoder.geocode( { 'address': address,'region': 'jp'},
+             function(results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+             var opt = {
+               zoom: 15,
+               center: results[0].geometry.location,
+               mapTypeId: google.maps.MapTypeId.ROADMAP
+             };
+
+             var map = new google.maps.Map(document.getElementById('map'), opt);
+
+            var bounds = new google.maps.LatLngBounds();
+            for (var r in results) {
+             if (results[r].geometry) {
+                var latlng = results[r].geometry.location;
+                bounds.extend(latlng);
+               new google.maps.Marker({
+               position: latlng,map: map
+               });
+             }
+            }
+            }else{
+             alert("Geocode 取得に失敗しました reason: "
+                  + status);
+            }
+           });
+          }
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDNVgT5804UXoeURVoizoNgepu1BXXsNvk&callback=initMap" type="text/javascript"></script>
+
+
+    <h3>カレンダー作成方法</h3>
+    <ol>
+      <li>表示したいカレンダーの年と月を入力します</li>
+      <li>好きな画像を選択します</li>
+      <li>予定など好きなことを入力します</li>
+      <li>重要な予定はダブルクリックして赤くすることができます。もう一度ダブルクリックすると解除できます。</li>
+      <li>「カレンダーを印刷する」ボタンを押すとプリントすることができます。</li>
+    </ol>
+
+    <a href = "final.html">カレンダー作成に戻る</a>
+  </body>
+
+</html>
